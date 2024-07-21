@@ -21,6 +21,8 @@ eventer-sample-project/
 ├── backend/
 │   ├── server.js
 │   └── package.json
+|   └── chainlit
+|       ├── server.py
 └── README.md
 ```
 
@@ -69,13 +71,27 @@ eventer-sample-project/
 3. `backend/package.json`
    - Lists backend project dependencies and scripts
 
+4. `backend/chainlit` 
+   - Contains the chainlit server for the AI assistant (Bonus Round)
+
 ## TODO List
 
 As we progress through the workshop, we'll be making the following key changes:
 
 - `backend/database.js`
+
    -- Manages the MongoDB connection
    -- Exports a function to connect to the database
+
+- `backend/server.js`
+
+   -- Implements CRUD operations for events
+
+   -- Adds search functionality to the events API
+
+   -- Creates a geospatial query endpoint
+   
+
 
 
 ### Backend TODOs:
@@ -86,7 +102,8 @@ As we progress through the workshop, we'll be making the following key changes:
 5. Create a geospatial query endpoint in `server.js`
 
 #### Bonus round:
-- Implement AI based event promotion service.
+- Implement AI based customer chatbot with MongoDB Atlas Vector Search
+
 
 ## Next Steps
 
