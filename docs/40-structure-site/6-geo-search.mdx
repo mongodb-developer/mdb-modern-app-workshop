@@ -1,0 +1,97 @@
+# 🌍 Running geospatial queries with MongoDB
+
+In this section, we'll explore how to use geospatial queries in MongoDB to enable location-based search in our Eventer application. MongoDB provides powerful geospatial features that allow us to store and query location data efficiently.
+
+As you may noticed the location dropdown values are associated with coordinates. We will use these coordinates to perform geospatial queries to find events near a specific location.
+
+## What are Geospatial Queries?
+
+Geospatial queries in MongoDB allow us to store and query location data using the GeoJSON format. MongoDB supports two types of geospatial queries:
+
+1. **Near Queries**: Find documents near a specific location.
+2. **GeoWithin Queries**: Find documents within a specific area.
+
+We'll focus on the `near` query to find events near a given location.
+
+
+## Create a Geospatial Index
+
+Before we can perform geospatial queries, we need to create a geospatial index on our MongoDB collection. This index allows MongoDB to efficiently query location data.
+
+### Step 1: Create a Geospatial Index
+
+We'll create a 2dsphere index on the `location.address` field of our `events` collection. This index will enable us to perform near queries on the location data.
+
+```javascript
+// backend/server.js
+
+// Create a 2dsphere index on the location field
+async function connect()
+{
+    db = await connectToMongoDB();
+    await db.collection('events').createIndex({ 'location.address': '2dsphere' });
+}
+
+```
+
+
+### Step 2: Use the geoNear Operator
+
+Now that we have created the geospatial index, we can use the `$geoNear` operator in the aggregation pipeline to perform a near query.
+
+
+TODO: Implement a route `app.get('/api/location/search')` to find events near a specific location in `backend/server.js`.
+
+Docs: [$geoNear](https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/)
+
+<details>
+<summary>Hint</summary>
+
+Use the `$geoNear` stage in the aggregation pipeline to perform a near query on the indexed field. You can specify the `near` parameter with the coordinates of the location you want to search near. Remeber that the coordinates should be in the GeoJSON format which is under `query.address`.
+
+
+
+</details>
+
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+app.get('/api/search/location', async (req, res) => {
+  const query = JSON.parse(req.query.query);
+
+
+  try {
+      const results = await db.collection('events').aggregate([
+          {
+              $geoNear: {
+                  near: query.address,
+                  distanceField: 'distance',
+                  spherical: true
+              }
+          }
+      ]).toArray();
+
+      res.json(results);
+  } catch (error) {
+      console.error('Error searching for events:', error);
+      res.status(500).json({ error: 'Error searching for events' });
+  }
+});
+```
+
+</details>
+
+
+## Test the Geospatial Query
+
+Now that we have implemented the geospatial query, let's test it by searching for events near a specific location.
+
+Great! You have successfully implemented geospatial queries in your Eventer application. Users can now search for events near a specific location using the coordinates associated with the event locations.
+
+
+
+

@@ -1,0 +1,95 @@
+# 🪚🪛 CRUD operation continued
+
+In the previous step, we implemented the create and find operation. In this step, we'll implement the  update, and delete operations in our Eventer application using MongoDB.
+
+Our collection under the `eventer` database will be named `events`.
+
+
+## Step 3: Update an Event
+
+In this step, we'll implement the update operation in our Eventer application. We'll allow users to update an existing event by sending a `PUT` request to the server.
+
+TODO: Implement the route of `app.put` to update an event in `backend/server.js`.
+
+Docs: [findOneAndUpdate](https://mongodb.github.io/node-mongodb-native/4.1/classes/Collection.html#findOneAndUpdate)
+
+
+<details>
+<summary>Hint</summary>
+
+Use the `findOneAndUpdate` with `$set` and `returnDocument: 'after'` clauses on the MongoDB collection to update an existing document.
+
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+app.put('/api/events/:id', async (req, res) => {
+  const id = req.params.id;
+  const event = req.body;
+  delete event._id; // Remove _id field from the request body
+  try {
+      const result = await db.collection('events').findOneAndUpdate(
+          { _id: new ObjectId(id) },
+          { $set: event },
+          { returnDocument: 'after' }
+      );
+      res.json(result);
+  } catch (error) {
+      console.error('Error updating event:', error);
+      res.status(500).json({ error: 'Error updating event' });
+  }
+});
+```
+
+</details>
+
+
+## Step 4: Delete an Event
+
+
+In this step, we'll implement the delete operation in our Eventer application. We'll allow users to delete an existing event by sending a `DELETE` request to the server.
+
+TODO: Implement the route of `app.delete` to delete an event in `backend/server.js`.
+
+Docs : [deleteOne](https://mongodb.github.io/node-mongodb-native/4.1/classes/Collection.html#deleteOne)
+
+
+
+<details>
+<summary>Hint</summary>
+
+Use the `deleteOne` method on the MongoDB collection to remove an existing document. Remember to convert the `id` parameter to an `ObjectId`.
+
+
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+app.delete('/api/events/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await db.collection('events').deleteOne({ _id: ObjectId(id) });
+        if (result.deletedCount === 0) {
+            res.status(404).json({ error: 'Event not found' });
+            return;
+        }
+        res.json(result.deletedCount);
+    } catch (error) {
+        console.error('Error deleting event:', error);
+        res.status(500).json({ error: 'Error deleting event' });
+    }
+});
+```
+
+</details>
+
+Great! In this step, we've implemented the update and delete operations in our Eventer application. Now, users can perform all CRUD operations on events using our MongoDB backend. Go test them!
+
+

@@ -1,0 +1,52 @@
+# 🤖 Chainlit Co-Pilot bot
+
+Chainlit is an open source Bot framework. It allows building costomizable AI conversational elements. 
+
+In our case we will use its server and co-pilot emebdded feature to add a conversational chatbot based on our data.
+
+## Setup Chainlit
+
+### Prerequisites
+- Python 3.11  or higher
+- The pip package manager
+- Open AI API KEY
+
+## Setup OPEN AI key
+You will need to set up your OpenAI key to use the encoder. You can do this by setting the `OPENAI_API_KEY` environment variable.
+
+If no key provided for you by the workshop, you can get your key from the OpenAI website:
+1. Go to the [OpenAI website](https://platform.openai.com/)
+2. Sign up for an account
+3. Create a new API key > Copy the key
+
+You can set the key in your terminal.
+
+### Installation
+
+
+1. Install the required packages:
+```bash
+cd backend
+pip install -r chainlit/requirements.txt
+```
+
+2. Setup OPEN AI key in `.env` file:
+```bash
+MONGODB_ATLAS_URI=your_mongodb_uri
+OPENAI_API_KEY=your_openai_key
+```
+
+
+
+3. Start the server in a new terminal:
+```bash
+chainlit run chainlit/server.py
+```
+
+Once the server loads you will see a chat interface in your browser. You can test it reponds in any way. 
+
+Although the bot is not trained yet, it will not be able to provide valubale information.
+
+
+
+

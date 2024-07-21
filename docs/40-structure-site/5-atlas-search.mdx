@@ -1,0 +1,95 @@
+# 🔎 Atlas Search for easy in application full text search
+
+In this section, we'll explore how to use Atlas Search to enable full-text search capabilities in our Eventer application. Atlas Search is a fully managed search service that allows us to perform complex queries on our MongoDB data.
+
+## What is Atlas Search?
+
+Atlas Search is a powerful search service provided by MongoDB Atlas. It allows us to perform full-text search, faceted search, and geospatial search on our data. Atlas Search leverages the power of the MongoDB query language and aggregation pipeline to provide fast and accurate search results.
+
+
+## Setting Up Atlas Search
+
+To use Atlas Search, we need to create a search index on our MongoDB collection. This index defines the fields we want to search on and the text analysis options to apply to the data.
+
+### Step 1: Create a Search Index
+
+Go to your MongoDB Atlas dashboard and select your cluster. In the left-hand menu, click on "Search" to access the Atlas Search service.
+
+
+### Step 2: Define the Index
+
+In the Atlas Search UI, click on "Indexes" and then "Create Search Index". Select the collection you want to index and define the fields you want to include in the search index. You can specify text analysis options such as language-specific stemming, stop words, and case insensitivity.
+
+We will use the following definition for the ease of implementation:
+
+```json
+{
+  "mappings": {
+    "fields": {
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      }
+    }
+  }
+}
+```
+
+This index will allow us to search for events based on their title and description fields.
+
+
+### Step 3: Add the search query to your application
+
+We will want to use the `aggregate` method to perform the search query. Here is an example of how you can use the `$search` stage in the aggregation pipeline to perform a full-text search:
+
+TODO: We will implement route `app.get('/api/events/search')` to perform a search query in `backend/server.js`.
+
+Docs : [Atlas Search](https://docs.atlas.mongodb.com/reference/atlas-search/)
+
+
+<details>
+<summary>Hint</summary>
+
+Use the `$search` stage and with index name `default`, operator `text` with `path : ["description","title"]` in the aggregation pipeline to perform a full-text search on the indexed fields.
+
+</details>
+
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+app.get('/api/events/search/:query', async (req, res) => {
+ 
+  const { query } = req.params;
+  try {
+    const result = await db.collection('events').aggregate([
+        {
+            $search: {
+                index: 'default',
+                text: {
+                    query: query,
+                    path: ["description", "name"]
+                }
+            }
+        }
+    ]).toArray();
+    res.json(result);
+} catch (error) {
+    console.error('Error searching events:', error);
+    res.status(500).json({ error: 'Error searching events' });
+}
+});
+```
+
+</details>
+
+
+## Testing Atlas Search
+
+Use the application to run a search query from the search bar.
+

@@ -1,0 +1,147 @@
+# 👐 Update the AI bot to have context
+
+
+We're now ready to implement changes to our AI bot to include context. This will allow the bot to provide more accurate responses to user queries.
+
+## Add the semantic search context
+
+Let's edit the `backend/chainlit/server.py` file and add the following functions code:
+
+```python
+async def getEmbedding(query):
+
+    queryVector =  await client.embeddings.create(
+        model="text-embedding-3-small",
+        input=query,
+    )
+    query_vec = queryVector.data[0].embedding
+   
+    return query_vec
+```
+
+This function will take a query and return the vector embedding for that query. Similar to the way the documents are embedded, we'll use this function to embed the user's query.
+
+
+## Add a vector query to the bot
+
+Next, let's add a function to query the database based on the user's query. Add the following code to the `backend/chainlit/server.py` file:
+
+```python
+
+# def getContext(embedding):
+    docs = []
+    ## Implement your context $vectorSearch aggregation here
+    # docs = list(collection.aggregate ... )
+    
+    return docs
+```
+
+As you can notice we are returning an empty list for now. 
+
+TODO : We will implement the context search in the next step with an [Atlas vector search](https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-stage/).
+
+<details>
+<summary>Hint</summary>
+
+You can use the `$vectorSearch` aggregation stage to search for documents based on the user's query vector. Syntax:
+```python
+docs = list(collection.aggregate([
+    {
+        "$vectorSearch": {
+            "index": "vector_index",
+                "queryVector": <vector>,
+                "path": <your_embedding>,
+                "numCandidates" : 20,
+                "limit" : 10
+            }
+        }
+]))
+```
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```python
+def getContext(embedding):
+    docs = []
+    docs = list(collection.aggregate([
+       {
+            '$vectorSearch': {
+                'index': 'vector_index', 
+                'queryVector': embedding, 
+                'path': 'embedding', 
+                'numCandidates' : 20,
+                'limit' : 10
+            }},
+            { '$project' : {
+              'embedding'  : 0
+            } }
+    ]))
+
+    return docs
+```
+</details>
+
+Once done lets use this function to get the context for the user query.
+
+Uncomment the lines in `on_message(message: cl.Message)` function to provide context to the AI model.
+
+```python
+@cl.on_message
+async def on_message(message: cl.Message):
+    context=""
+    embedding = await getEmbedding(message.content)
+    context = getContext(embedding)
+    response = await client.chat.completions.create(
+        messages=[
+            {
+                "content": "You are a helpful assistant, please respond to user searches on events and their details.",
+                "role": "system"
+            },
+            {
+                "content": f" With the relevant context: {context} \n Assist with to the user message {message.content}. If you don't see the details in cotext please respond that you could not find any details for that query.",
+                "role": "user"
+            }
+        ],
+        **settings
+    )
+    await cl.Message(content=response.choices[0].message.content).send()
+```
+## Test your code
+
+Lets restart the chainlit server:
+```bash
+chainlit run chainlit/server.py
+```
+
+Now, you can test the bot with a query. You should see the context sections from the database that are relevant to the query.
+
+
+## Update the app to embed the built assistant
+
+To add the chainlit assistant to the app, we need to update the `frontend/public/index.html` file, on the buttom.
+
+```html
+<body>
+  ...
+<script src="http://localhost:8000/copilot/index.js"></script>
+  <script>
+    window.mountChainlitWidget({
+      chainlitServer: "http://localhost:8000",
+    });
+  </script>
+</body>
+  ```
+
+  The `chainlitServer` should point to the server where the chainlit server is running. As well as the `src` should point to the chainlit copilot.
+
+
+
+
+## Test it out
+
+Now you can test the app with the updated AI bot. The bot should now provide more accurate responses based on the context of the user's query.
+<Screenshot src="img/screenshots/7-vector-search/6-create-index/FestivalQ.png" alt="Festival Question" url="http://localhost:3000" />
+
+Congratulations! You have successfully updated the AI bot to include context.

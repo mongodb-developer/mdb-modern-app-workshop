@@ -1,0 +1,75 @@
+# 👆 Indexing
+
+In this section, we'll explore how to create indexes in MongoDB for optimizing query performance. Indexes are data structures that store a small portion of the collection's data set in an easy-to-traverse form. By creating indexes on fields that are frequently queried, you can speed up read operations and improve the overall performance of your application.
+
+## What are Indexes?
+
+Indexes in MongoDB are similar to indexes in relational databases. They store a sorted representation of the data in a collection based on the values of one or more fields. When you query a collection, MongoDB can use indexes to quickly locate the documents that match the query criteria.
+
+## Creating Indexes
+
+To create an index in MongoDB, you use the `createIndex` method on a collection. You can create indexes on single fields, compound indexes on multiple fields, and text indexes for full-text search.
+
+
+### Step 1: Create a Single Field Index
+
+
+We'll create a single-field index on the field date. This way we can quickly query events based on their date.
+
+```javascript
+// backend/server.js
+
+// Create a 2dsphere index on the location field
+async function connect()
+{
+    db = await connectToMongoDB();
+    await db.collection('events').createIndex({ 'location.address': '2dsphere' });
+    await db.collection('events').createIndex({ date: -1 });
+}
+
+```
+
+This code creates a descending index on the date field. The `-1` value specifies that the index should be sorted in descending order.
+
+### Step 2 : Add order to events based on dates 
+
+Now that we have created the index, we can use it to sort events based on their date.
+
+TODO: Use the created index to sort events based on their date in `backend/server.js`.
+
+
+<details>
+<summary>Hint</summary>
+
+You can use the `sort` method on the MongoDB collection to sort the events based on the date field. Remember to pass the field name and the sort order (1 for ascending, -1 for descending).
+
+Docs: [sort](https://mongodb.github.io/node-mongodb-native/4.1/classes/Collection.html#find)
+
+
+
+</details>
+
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+app.get('/api/events', async (req, res) => {
+    try {
+        const events = await db.collection('events').find().sort({ date: -1 }).toArray();
+        res.json(events);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        res.status(500).json({ error: 'Error fetching events' });
+    }
+});
+```
+
+</details>
+
+Great! Now you have created an index on the date field and used it to sort events based on their date.
+
+You have finished the mandatory part of the workshop! Feel free to explore the optional sections to learn more about MongoDB and AI.
+

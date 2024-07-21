@@ -1,0 +1,95 @@
+# ⚙️ Application Structure
+
+Let's explore the structure of our EventBuddy application, including both the frontend and backend components. This overview will help you navigate the codebase as we integrate MongoDB functionality.
+
+## Directory Structure
+
+```
+eventer-sample-project/
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── EventForm.js
+│   │   │   ├── EventItem.js
+│   │   │   ├── EventList.js
+│   │   │   └── SearchBar.js
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── public/
+│   │   └── index.html
+│   └── package.json
+├── backend/
+│   ├── server.js
+│   └── package.json
+└── README.md
+```
+
+## Frontend Structure
+
+### Key Files and Their Purposes
+
+1. `frontend/src/App.js`
+   - The main component of our React application
+   - Manages the state for events
+   - Renders the main layout
+   - Will be updated to make API calls to our backend
+
+2. `frontend/src/components/EventForm.js`
+   - Renders a form for creating or editing events
+   - Will be modified to send data to our backend API
+
+3. `frontend/src/components/EventList.js`
+   - Displays the list of events
+   - Will be updated to fetch data from our backend API
+
+4. `frontend/src/components/EventItem.js`
+   - Renders individual event items
+   - Will be updated to handle MongoDB document IDs
+
+5. `frontend/src/components/SearchBar.js`
+   - Provides search functionality
+   - Will be enhanced to send search queries to our backend
+
+6. `frontend/package.json`
+   - Lists frontend project dependencies and scripts
+
+## Backend Structure
+
+### Key Files and Their Purposes
+
+1. `backend/server.js`
+   - The entry point for our Express.js server
+   - Sets up middleware and routes
+   - Starts the server
+   - Implements API endpoints for event operations (CRUD)
+   - Handles search functionality
+
+
+
+3. `backend/package.json`
+   - Lists backend project dependencies and scripts
+
+## TODO List
+
+As we progress through the workshop, we'll be making the following key changes:
+
+- `backend/database.js`
+   -- Manages the MongoDB connection
+   -- Exports a function to connect to the database
+
+
+### Backend TODOs:
+1. Create `database.js` to manage MongoDB connection
+2. Implement CRUD operations for events in `server.js`
+3. Add search functionality to the events API in `server.js`
+4. Implement pagination for the events list API in `server.js`
+5. Create a geospatial query endpoint in `server.js`
+
+#### Bonus round:
+- Implement AI based event promotion service.
+
+## Next Steps
+
+Now that you're familiar with both the frontend and backend structure of our application, we're ready to start integrating MongoDB. We'll begin by setting up our backend server and connecting it to MongoDB Atlas. Then, we'll implement our API endpoints and gradually update our frontend components to interact with this new API.
+
+Remember, the TODOs listed here are just a preview of what's to come. Don't worry if you're not sure how to tackle them yet - we'll guide you through each step in the upcoming sections!

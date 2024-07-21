@@ -1,0 +1,170 @@
+# 🌅 Basic CRUD operations
+
+In this step, we"ll implement basic CRUD (Create, Read, Update, Delete) operations in our Eventer application using MongoDB. We"ll start by creating a new event, fetching all events, updating an event, and deleting an event.
+
+
+_Please note that our intention is to replace the mock data with MongoDB operations. We"ll be using the MongoDB Node.js driver to interact with our database._
+
+Our collection under the `eventer` database will be named `events`.
+
+Lets first populate our MongoDB database with some sample data using the Data Explorer or Compass. 
+
+```json
+[
+  {  "name": "Summer Festival", 
+    "description": "Annual music festival", 
+    "date": "2024-07-15", 
+    "location": { "name" : "New York" , "address" : {
+    "type" : "Point",
+    "coordinates" : [-73.935242, 40.73061]
+  } } },
+    {  "name": "Tech Conference", 
+        "description": "Annual tech conference", 
+        "date": "2024-09-20", 
+        "location": { "name" : "San Francisco" , "address" : {
+        "type" : "Point",
+        "coordinates" : [-122.419416, 37.774929]
+    } } },
+    {  "name": "Food Festival", 
+        "description": "Annual food festival", 
+        "date": "2024-11-10", 
+        "location": { "name" : "New York" , "address" : {
+        "type" : "Point",
+        "coordinates" : [-73.935242, 40.73061]
+    } } },
+    {  "name": "Music Concert", 
+        "description": "Annual music concert", 
+        "date": "2024-12-25", 
+        "location": { "name" : "San Francisco" , "address" : {
+        "type" : "Point",
+        "coordinates" : [-122.419416, 37.774929]
+    } } } 
+]
+```
+
+
+## Step 2: Create a New Event
+
+Your first task is to create a new event in the MongoDB database.
+
+TODO: Implement the route of `app.post` to create a new event in `backend/server.js`.
+
+Docs: [insertOne](https://www.mongodb.com/docs/drivers/node/current/fundamentals/crud/write-operations/insert/#insert-a-single-document)
+
+<details>
+<summary>Hint</summary>
+
+Use the `insertOne` method on the MongoDB collection to insert a new document.
+
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+app.post("/api/events", async (req, res) => {
+    const event = req.body;
+    try {
+
+        const result = await db.collection("events").insertOne(event);
+        res.json(result.insertedId);
+    }
+    catch (error) {
+        console.error("Error creating event:", error);
+        res.status(500).json({ error: "Error creating event" });
+    }
+});
+```
+</details>
+## Step 2: Get All Events
+
+Your first task is to fetch all events from the MongoDB database.
+
+TODO: Implement the route of `app.get` to fetch all events from the database in `backend/server.js`.
+
+Docs : [find](https://www.mongodb.com/docs/drivers/node/current/usage-examples/find/)
+
+<details>
+<summary>Hint</summary>
+
+Use the `find` method on the MongoDB collection to fetch all documents.
+
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+app.get("/api/events", async (req, res) => {
+    try {
+    // TODO: Serve from MongoDB
+        events = await db.collection("events").find().toArray();
+        res.json(events);
+    }
+    catch (error) {
+        console.error("Error fetching events:", error);
+        res.status(500).json({ error: "Error fetching events" });
+    }
+});
+```
+
+</details>
+
+## Step 4: Get a Single Event
+
+Your next task is to fetch a single event by its ID from the MongoDB database. Be mindful that the ID is a `ObjectId` type.
+
+TODO: Implement the route of `app.get` to fetch a single event by ID in `backend/server.js`.
+
+Docs: [findOne](https://www.mongodb.com/docs/drivers/node/current/usage-examples/findOne/)
+
+
+
+<details>
+<summary>Hint</summary>
+
+Use the `findOne` method on the MongoDB collection to fetch a single document by its ID. Remember to use `ObjectId` to convert the string ID to the correct type.
+
+</details>
+
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+
+const { ObjectId } = require("mongodb");
+
+
+app.get("/api/events/:id", async (req, res) => {
+    const id = req.params.id;
+    try {
+        const event = await db.collection("events").findOne({ _id: ObjectId(id) });
+        if (!event) {
+            res.status(404).json({ error: "Event not found" });
+            return;
+        }
+        res.json(event);
+    }
+    catch (error) {
+        console.error("Error fetching event:", error);
+        res.status(500).json({ error: "Error fetching event" });
+    }
+});
+```
+
+</details>
+
+
+
+
+
+
+
+
+

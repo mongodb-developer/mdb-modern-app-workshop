@@ -1,0 +1,8 @@
+{
+    "label": "🏗️ Build the application",
+    "position": 40,
+    "link": {
+        "type": "generated-index",
+        "description": "Learn how to build the application using MongoDB"
+    }
+}

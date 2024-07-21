@@ -1,0 +1,95 @@
+---
+sidebar_position: 2
+---
+
+# 🧩 Connecting Eventer backend with MongoDB
+
+In this section, we'll guide you through building the core functionality of Eventer using MongoDB Atlas connection. Each step will present a challenge for you to solve, with hints and solutions available if you need them.
+
+## Install the MongoDB Node.js Driver
+
+Before we can connect to MongoDB, we need to install the MongoDB Node.js driver. This package allows us to interact with MongoDB from our Node.js application.
+```bash
+npm install mongodb
+```
+
+
+## Step 1: Connecting to MongoDB Atlas
+
+Your first task is to establish a connection to MongoDB.
+
+TODO: Create a function that connects to MongoDB and returns a database object under `backend/database.js`.
+
+Docs :  [MongoDB Node.js Driver](https://www.mongodb.com/docs/drivers/node/current/fundamentals/connection/connect/#std-label-node-connect-to-mongodb)
+
+
+<details>
+<summary>Hint</summary>
+
+Use the `MongoClient` from the `mongodb` package to establish a connection. Remember to use `async/await` for handling the asynchronous connection process.
+
+</details>
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+const { MongoClient } = require('mongodb');
+
+const uri = '<YOUR_ATLAS_CONNECTION>';
+const client = new MongoClient(uri);
+
+async function connectToMongoDB() {
+  try {
+    await client.connect();
+    console.log('Connected to MongoDB');
+    return client.db('eventer');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1);
+  }
+}
+
+module.exports = connectToMongoDB;
+```
+</details>
+
+## Step 2: Connect server.js with database.js
+
+In order to use the MongoDB connection in our Express server, we need to import the `connectToMongoDB` function and call it when the server starts.
+
+TODO: Import the `connectToMongoDB` function in `backend/server.js` and establish the MongoDB connection.
+
+
+<details>
+<summary>Hint</summary>
+
+You can import the function from `database.js` and call it in the server setup code in file `backend/server.js` and setup a global `db` object using a local async `connect()` function.
+
+</details>
+
+
+<details>
+<summary>Solution</summary>
+
+```javascript
+// backend/server.js
+const express = require('express');
+const connectToMongoDB = require('./database');
+let db;
+
+async function connect() {
+  db = await connectToMongoDB();
+}
+
+connect();
+
+```
+</details>
+
+Great job! You've successfully connected your Eventer backend with MongoDB Atlas. In the next steps, we'll implement CRUD operations and explore more advanced MongoDB features.
+
+
+
+
+
