@@ -75,7 +75,7 @@ Use the `deleteOne` method on the MongoDB collection to remove an existing docum
 app.delete('/api/events/:id', async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await db.collection('events').deleteOne({ _id: ObjectId(id) });
+        const result = await db.collection('events').deleteOne({ _id: new ObjectId(id) });
         if (result.deletedCount === 0) {
             res.status(404).json({ error: 'Event not found' });
             return;
