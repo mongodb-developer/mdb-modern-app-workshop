@@ -29,7 +29,7 @@ We'll be using MongoDB Atlas, a fully-managed cloud database service. Let's set 
 Once your cluster is created:
 
 6. In the Security menu, create a database user with read and write privileges.
-7. In the Network Access menu, add your current IP address to the IP whitelist.
+7. In the Network Access menu, add your current IP address to the IP whitelist (open `0.0.0.0/0` if you use codespaces).
 8. Go to the Clusters view, click "Connect", choose "Connect your application", and copy the connection string. We'll use this later.
 
 ## 3. Setting Up the Stub Application
@@ -43,6 +43,8 @@ cd eventer-sample-project
 ```
 - OR -
 Use github codespaces to open the project in a browser-based IDE.
+
+
 
 2. Install dependencies for backend and frontend:
 ```bash
@@ -78,6 +80,19 @@ cd ../frontend
 ```bash
 npm start
 ```
+
+### Using codespaces
+
+When using codespace you need to make sure you open the backend provided URL to "Public Visability":
+
+1. Open "Ports" tab in the bottom of the IDE
+2. Right click the backend port and select "Port Visability" > "Public"
+3. Edit the `frontend/.env` file to set the `BACKEND_URL` paramter to the backend URL provided in the IDE.
+
+![codespaces](/img/Public-port-codespaces.png)
+
+
+
 
 
 
