@@ -118,7 +118,7 @@ Use the `insertOne` method on the MongoDB collection to insert a new document.
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
 app.post("/api/events", async (req, res) => {
     const event = req.body;
@@ -153,13 +153,13 @@ Use the `find` method on the MongoDB collection to fetch all documents.
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
 app.get("/api/events", async (req, res) => {
     try {
     // TODO: Serve from MongoDB
-        events = await db.collection("events").find().toArray();
-        res.json(events);
+        const dbEvents = await db.collection("events").find().toArray();
+        res.json(dbEvents);
     }
     catch (error) {
         console.error("Error fetching events:", error);
@@ -192,9 +192,10 @@ Use the `findOne` method on the MongoDB collection to fetch a single document by
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
-const { ObjectId } = require("mongodb");
+import {ObjectId} from 'mongodb';
+
 
 
 app.get("/api/events/:id", async (req, res) => {

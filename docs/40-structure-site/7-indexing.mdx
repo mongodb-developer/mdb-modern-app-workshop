@@ -17,14 +17,19 @@ To create an index in MongoDB, you use the `createIndex` method on a collection.
 We'll create a single-field index on the field date. This way we can quickly query events based on their date.
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
-// Create a 2dsphere index on the location field
-async function connect()
-{
-    db = await connectToMongoDB();
+async function initializeMongoDB() {
+  try {
+    db = await connectToMongoDB.connect();
+    console.log('MongoDB connected successfully');
     await db.collection('events').createIndex({ 'location.address': '2dsphere' });
     await db.collection('events').createIndex({ date: -1 });
+    console.log('Created indexes on location and date fields');
+  } catch (error) {
+    console.error('Failed to connect to MongoDB', error);
+    process.exit(1);
+  }
 }
 
 ```
@@ -54,17 +59,20 @@ Docs: [sort](https://mongodb.github.io/node-mongodb-native/4.1/classes/Collectio
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
-app.get('/api/events', async (req, res) => {
-    try {
-        const events = await db.collection('events').find().sort({ date: -1 }).toArray();
-        res.json(events);
-    } catch (error) {
-        console.error('Error fetching events:', error);
-        res.status(500).json({ error: 'Error fetching events' });
-    }
+app.get("/api/events", async (req, res) => {
+  try {
+  // TODO: Serve from MongoDB
+      const dbEvents= await db.collection("events").find().sort({date: -1}).toArray();
+      res.json(dbEvents);
+  }
+  catch (error) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({ error: "Error fetching events" });
+  }
 });
+
 ```
 
 </details>

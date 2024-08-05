@@ -9,7 +9,7 @@ Our collection under the `eventer` database will be named `events`.
 
 In this step, we'll implement the update operation in our Eventer application. We'll allow users to update an existing event by sending a `PUT` request to the server.
 
-TODO: Implement the route of `app.put` to update an event in `backend/server.js`.
+TODO: Implement the route of `app.put` to update an event in `backend/server.ts`.
 
 Docs: [findOneAndUpdate](https://mongodb.github.io/node-mongodb-native/4.1/classes/Collection.html#findOneAndUpdate)
 
@@ -25,7 +25,7 @@ Use the `findOneAndUpdate` with `$set` and `returnDocument: 'after'` clauses on 
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 app.put('/api/events/:id', async (req, res) => {
   const id = req.params.id;
   const event = req.body;
@@ -52,7 +52,7 @@ app.put('/api/events/:id', async (req, res) => {
 
 In this step, we'll implement the delete operation in our Eventer application. We'll allow users to delete an existing event by sending a `DELETE` request to the server.
 
-TODO: Implement the route of `app.delete` to delete an event in `backend/server.js`.
+TODO: Implement the route of `app.delete` to delete an event in `backend/server.ts`.
 
 Docs : [deleteOne](https://mongodb.github.io/node-mongodb-native/4.1/classes/Collection.html#deleteOne)
 
@@ -70,7 +70,7 @@ Use the `deleteOne` method on the MongoDB collection to remove an existing docum
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
 app.delete('/api/events/:id', async (req, res) => {
     const { id } = req.params;

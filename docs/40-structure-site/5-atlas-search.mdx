@@ -44,7 +44,7 @@ This index will allow us to search for events based on their title and descripti
 
 We will want to use the `aggregate` method to perform the search query. Here is an example of how you can use the `$search` stage in the aggregation pipeline to perform a full-text search:
 
-TODO: We will implement route `app.get('/api/events/search')` to perform a search query in `backend/server.js`.
+TODO: We will implement route `app.get('/api/events/search')` to perform a search query in `backend/server.ts`.
 
 Docs : [Atlas Search](https://docs.atlas.mongodb.com/reference/atlas-search/)
 
@@ -61,7 +61,7 @@ Use the `$search` stage and with index name `default`, operator `text` with `pat
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
 app.get('/api/events/search/:query', async (req, res) => {
  
@@ -92,4 +92,13 @@ app.get('/api/events/search/:query', async (req, res) => {
 ## Testing Atlas Search
 
 Use the application to run a search query from the search bar.
+
+Try to adjust the query code to include a fuzzy match:
+```typescript
+fuzzy : {
+  maxEdits : 2
+}
+```
+
+This will allow for more flexibility in the search results. See how it effects a search like "sommer".
 

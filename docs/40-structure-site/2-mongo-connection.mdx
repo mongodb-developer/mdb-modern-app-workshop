@@ -11,81 +11,104 @@ In this section, we'll guide you through building the core functionality of Even
 Before we can connect to MongoDB, we need to install the MongoDB Node.js driver. This package allows us to interact with MongoDB from our Node.js application.
 ```bash
 npm install mongodb
+npm install --save-dev @types/mongodb
 ```
 
 
 ## Step 1: Connecting to MongoDB Atlas
 
-Your first task is to establish a connection to MongoDB.
-
-TODO: Create a function that connects to MongoDB and returns a database object under `backend/database.js`.
-
 Docs :  [MongoDB Node.js Driver](https://www.mongodb.com/docs/drivers/node/current/fundamentals/connection/connect/#std-label-node-connect-to-mongodb)
 
+First we need to setup our connection string at `backend/.env` file:
+```
+MONGODB_ATLAS_URI=your-atlas-uri
+```
 
-<details>
-<summary>Hint</summary>
+Let's create a database helper file at `backend/database.ts`:
 
-Use the `MongoClient` from the `mongodb` package to establish a connection. Remember to use `async/await` for handling the asynchronous connection process.
+```typescript
+import { MongoClient, Db } from 'mongodb';
+import dotenv from 'dotenv';
 
-</details>
+dotenv.config();
 
-<details>
-<summary>Solution</summary>
+const uri: string = process.env.MONGODB_ATLAS_URI || '';
 
-```javascript
-const { MongoClient } = require('mongodb');
+class mongoConnection {
+  private client: MongoClient;
 
-const uri = '<YOUR_ATLAS_CONNECTION>';
-const client = new MongoClient(uri);
+  constructor() {
+    this.client = new MongoClient(uri);
+  }
 
-async function connectToMongoDB() {
+  async connect(): Promise<Db> {
+    try {
+      await this.client.connect();
+      console.log('Connected to MongoDB');
+      return this.client.db('eventer');
+    } catch (error) {
+      console.error('Error connecting to MongoDB:', error);
+      throw error;
+    }
+  }
+
+  async close(): Promise<void> {
+    try {
+      await this.client.close();
+      console.log('Disconnected from MongoDB');
+    } catch (error) {
+      console.error('Error disconnecting from MongoDB:', error);
+      throw error;
+    }
+  }
+}
+
+export const connectToMongoDB = new mongoConnection();
+```
+
+
+## Step 2: Connect server.ts with database.ts
+
+In order to use the MongoDB connection in our Express server, we need to import the `connectToMongoDB` function and call it when the server starts.
+
+Lets edit `backend/server.ts` to adjust the following code:
+
+```typescript
+import express from 'express';
+import cors from 'cors';
+import { Event } from './types';
+import { v4 as uuidv4 } from 'uuid';
+import { connectToMongoDB } from './database';
+import { Db } from 'mongodb';
+
+const app = express();
+const port = 5000;
+
+app.use(cors());
+app.use(express.json());
+
+let db: Db;
+
+async function initializeMongoDB() {
   try {
-    await client.connect();
-    console.log('Connected to MongoDB');
-    return client.db('eventer');
+    db = await connectToMongoDB.connect();
+    console.log('MongoDB connected successfully');
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    console.error('Failed to connect to MongoDB', error);
     process.exit(1);
   }
 }
 
-module.exports = connectToMongoDB;
-```
-</details>
+// Rest of the API routes
 
-## Step 2: Connect server.js with database.js
+initializeMongoDB().then(() => {
 
-In order to use the MongoDB connection in our Express server, we need to import the `connectToMongoDB` function and call it when the server starts.
-
-TODO: Import the `connectToMongoDB` function in `backend/server.js` and establish the MongoDB connection.
-
-
-<details>
-<summary>Hint</summary>
-
-You can import the function from `database.js` and call it in the server setup code in file `backend/server.js` and setup a global `db` object using a local async `connect()` function.
-
-</details>
-
-
-<details>
-<summary>Solution</summary>
-
-```javascript
-// backend/server.js
-const express = require('express');
-const connectToMongoDB = require('./database');
-let db;
-
-async function connect() {
-  db = await connectToMongoDB();
-}
-
-connect();
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
+});
 
 ```
-</details>
 
 Great job! You've successfully connected your Eventer backend with MongoDB Atlas. In the next steps, we'll implement CRUD operations and explore more advanced MongoDB features.
 

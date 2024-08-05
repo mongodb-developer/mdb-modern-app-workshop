@@ -23,13 +23,19 @@ Before we can perform geospatial queries, we need to create a geospatial index o
 We'll create a 2dsphere index on the `location.address` field of our `events` collection. This index will enable us to perform near queries on the location data.
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
 // Create a 2dsphere index on the location field
-async function connect()
-{
-    db = await connectToMongoDB();
+async function initializeMongoDB() {
+  try {
+    db = await connectToMongoDB.connect();
+    console.log('MongoDB connected successfully');
     await db.collection('events').createIndex({ 'location.address': '2dsphere' });
+    console.log('Created 2dsphere index on location.address');
+  } catch (error) {
+    console.error('Failed to connect to MongoDB', error);
+    process.exit(1);
+  }
 }
 
 ```
@@ -58,10 +64,11 @@ Use the `$geoNear` stage in the aggregation pipeline to perform a near query on 
 <summary>Solution</summary>
 
 ```javascript
-// backend/server.js
+// backend/server.ts
 
 app.get('/api/search/location', async (req, res) => {
-  const query = JSON.parse(req.query.query);
+  const locQuery: any = req.query.query
+  const query = JSON.parse(locQuery);
 
 
   try {

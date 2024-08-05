@@ -19,7 +19,9 @@ eventer-sample-project/
 │   │   └── index.html
 │   └── package.json
 ├── backend/
-│   ├── server.js
+│   ├── server.ts
+│   ├── types.ts
+│   ├── tsconfig.json
 │   └── package.json
 |   └── chainlit
 |       ├── server.py
@@ -59,7 +61,7 @@ eventer-sample-project/
 
 ### Key Files and Their Purposes
 
-1. `backend/server.js`
+1. `backend/server.ts`
    - The entry point for our Express.js server
    - Sets up middleware and routes
    - Starts the server
@@ -78,12 +80,12 @@ eventer-sample-project/
 
 As we progress through the workshop, we'll be making the following key changes:
 
-- `backend/database.js`
+- `backend/database.ts`
 
    -- Manages the MongoDB connection
    -- Exports a function to connect to the database
 
-- `backend/server.js`
+- `backend/server.ts`
 
    -- Implements CRUD operations for events
 
@@ -95,11 +97,11 @@ As we progress through the workshop, we'll be making the following key changes:
 
 
 ### Backend TODOs:
-1. Create `database.js` to manage MongoDB connection
-2. Implement CRUD operations for events in `server.js`
-3. Add search functionality to the events API in `server.js`
-4. Implement pagination for the events list API in `server.js`
-5. Create a geospatial query endpoint in `server.js`
+1. Create `database.ts` to manage MongoDB connection
+2. Implement CRUD operations for events in `server.ts`
+3. Add search functionality to the events API in `server.ts`
+4. Implement pagination for the events list API in `server.ts`
+5. Create a geospatial query endpoint in `server.ts`
 
 #### Bonus round:
 - Implement AI based customer chatbot with MongoDB Atlas Vector Search
