@@ -4,7 +4,7 @@
 // Change here to customise config
 
 // Name of the Github Repo, it's also teh baseUrl
-const workshopName = 'docs-mongodb-workshop-eventer';
+const workshopName = 'mdb-modern-app-workshop';
 // Change this if hosting outside mongodb-developer
 const organizationName = "mongodb-developer";
 
@@ -88,7 +88,7 @@ const config = {
   title: `${title}`,
   tagline: `${tagLine}`,
   url: `https://${workshopName}.github.io`,
-  baseUrl: `/`,
+  baseUrl: `/${workshopName}/`,
   projectName: `${organizationName}.github.io`,
   organizationName: `${organizationName}`,
   trailingSlash: false,
