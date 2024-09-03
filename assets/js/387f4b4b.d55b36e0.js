@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkmongodb_workshop_eventer=self.webpackChunkmongodb_workshop_eventer||[]).push([[181],{4061:e=>{e.exports=JSON.parse('{"name":"docusaurus-plugin-content-pages","id":"default"}')}}]);
