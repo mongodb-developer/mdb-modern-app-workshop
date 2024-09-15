@@ -41,9 +41,6 @@ We'll start with a stub application and gradually add MongoDB functionality. Let
 git clone https://github.com/mongodb-developer/mongodb-workshop-eventer.git
 cd mongodb-workshop-eventer
 ```
-- OR -
-Use github codespaces to open the project in a browser-based IDE.
-
 
 
 2. Install dependencies for backend and frontend:
@@ -80,20 +77,6 @@ cd ../frontend
 ```bash
 npm start
 ```
-
-### Using codespaces
-
-When using codespaces you need to make sure you open the backend provided URL to "Public Visability":
-
-1. Open "Ports" tab in the bottom of the IDE
-2. Right click the backend port and select "Port Visability" > "Public"
-3. Edit the `frontend/.env` file to set the `BACKEND_URL` paramter to the backend URL provided in the IDE.
-
-![codespaces](/img/Public-port-codespaces.png)
-
-
-
-
 
 
 You should see the application running at [http://localhost:3000](http://localhost:3000). If you use the browser-based IDE, it will popup a toast to open the url.
